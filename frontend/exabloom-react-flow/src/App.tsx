@@ -56,14 +56,34 @@ export default function App() {
   };
 
   const onNodeNameChange = (e) => {
-    const newName = e.target.value; // current name of node
+    const newName = e.target.value;
+
+    if (!selectedNode) return;
+
     setNodes((nds) =>
-      nds.map((node) =>
-        node.id === selectedNode.id
-          ? { ...node, data: { ...node.data, label: newName } }
-          : node
-      )
+      nds.map((node) => {
+        if (node.id === selectedNode.id) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              label: newName || "", // Update the label with the new name
+            },
+          };
+        } else {
+          return node;
+        }
+      })
     );
+
+    // Update the selectedNode's label to reflect the change immediately
+    setSelectedNode((prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        label: newName || "",
+      },
+    }));
   };
 
   const onDeleteNode = () => {
