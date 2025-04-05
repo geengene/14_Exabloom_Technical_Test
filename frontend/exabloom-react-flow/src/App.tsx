@@ -7,61 +7,99 @@ import {
   useEdgesState,
   type OnConnect,
 } from "@xyflow/react";
-import ButtonEdgeDemo from "./components/EdgeButton";
+import AddButtonEdge from "./components/EdgeButton";
 import { DevTools } from "./components/devtools";
 import "@xyflow/react/dist/style.css";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import NodeForm from "./components/NodeForm";
 
 const defaultNodes = [
   {
-    id: "1",
+    id: "start",
     type: "default",
-    position: { x: 200, y: 200 },
+    position: { x: 0, y: 0 },
     data: { label: "Start" },
   },
   {
-    id: "2",
+    id: "end",
     type: "default",
-    position: { x: 500, y: 500 },
+    position: { x: 0, y: 200 },
     data: { label: "End" },
   },
 ];
-
 const defaultEdges = [
   {
-    id: "e1-2",
-    source: "1",
-    target: "2",
+    id: "start->end",
+    source: "start",
+    target: "end",
     type: "buttonedge",
   },
 ];
-
 const edgeTypes = {
-  buttonedge: ButtonEdgeDemo,
+  buttonedge: AddButtonEdge,
 };
 
 export default function App() {
-  const [nodes, , onNodesChange] = useNodesState([...defaultNodes]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([...defaultNodes]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([...defaultEdges]);
+  const [selectedNode, setSelectedNode] = useState(null); // Track selected node
+
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
     [setEdges]
   );
+
+  const onNodeClick = (event, node) => {
+    console.log(event, node);
+    setSelectedNode(node); // Set the clicked node as the selected node
+    // TODO: if no node selected, close the form
+  };
+
+  const onNodeNameChange = (e) => {
+    const newName = e.target.value; // current name of node
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === selectedNode.id
+          ? { ...node, data: { ...node.data, label: newName } }
+          : node
+      )
+    );
+  };
+
+  const onDeleteNode = () => {
+    setNodes((nds) => nds.filter((node) => node.id !== selectedNode.id));
+    setEdges((eds) =>
+      eds.filter(
+        (edge) =>
+          edge.source !== selectedNode.id && edge.target !== selectedNode.id
+      )
+    );
+    setSelectedNode(null); // Clear the selected node
+  };
+
   return (
-    <div className="w-screen h-screen p-8">
-      <ReactFlow
-        nodes={nodes}
-        onNodesChange={onNodesChange}
-        edges={edges}
-        onEdgesChange={onEdgesChange}
-        edgeTypes={edgeTypes}
-        onConnect={onConnect}
-        fitView
-      >
-        <Background />
-        <Controls />
-        <DevTools position="top-left" />
-      </ReactFlow>
+    <div className="flex">
+      <div className="w-screen h-screen p-8 flex-1">
+        <ReactFlow
+          nodes={nodes}
+          onNodesChange={onNodesChange}
+          edges={edges}
+          onEdgesChange={onEdgesChange}
+          edgeTypes={edgeTypes}
+          onNodeClick={onNodeClick} // Handle node click
+          onConnect={onConnect}
+          fitView
+        >
+          <Background />
+          <Controls />
+          <DevTools position="top-left" />
+        </ReactFlow>
+      </div>
+      <NodeForm
+        selectedNode={selectedNode}
+        onNodeNameChange={onNodeNameChange}
+        onDeleteNode={onDeleteNode}
+      />
     </div>
   );
 }
