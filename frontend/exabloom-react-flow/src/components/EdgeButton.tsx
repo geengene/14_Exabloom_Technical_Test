@@ -22,7 +22,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
       y: (sourceNode.position.y + targetNode.position.y) / 2,
     };
 
-    const offset = 75;
+    const offset = 50;
     // const updatedSourceNode = {
     //   ...sourceNode,
     //   position: {

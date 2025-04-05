@@ -7,37 +7,11 @@ import {
   useEdgesState,
   type OnConnect,
 } from "@xyflow/react";
-import AddButtonEdge from "./components/EdgeButton";
 import { DevTools } from "./components/devtools";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useState } from "react";
 import NodeForm from "./components/NodeForm";
-
-const defaultNodes = [
-  {
-    id: "start",
-    type: "default",
-    position: { x: 0, y: 0 },
-    data: { label: "Start" },
-  },
-  {
-    id: "end",
-    type: "default",
-    position: { x: 0, y: 200 },
-    data: { label: "End" },
-  },
-];
-const defaultEdges = [
-  {
-    id: "start->end",
-    source: "start",
-    target: "end",
-    type: "buttonedge",
-  },
-];
-const edgeTypes = {
-  buttonedge: AddButtonEdge,
-};
+import { defaultNodes, defaultEdges, edgeTypes } from "./lib/defaults";
 
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState([...defaultNodes]);
@@ -60,8 +34,8 @@ export default function App() {
 
     if (!selectedNode) return;
 
-    setNodes((nds) =>
-      nds.map((node) => {
+    setNodes((nodes) =>
+      nodes.map((node) => {
         if (node.id === selectedNode.id) {
           return {
             ...node,
@@ -87,9 +61,9 @@ export default function App() {
   };
 
   const onDeleteNode = () => {
-    setNodes((nds) => nds.filter((node) => node.id !== selectedNode.id));
-    setEdges((eds) =>
-      eds.filter(
+    setNodes((nodes) => nodes.filter((node) => node.id !== selectedNode.id));
+    setEdges((edges) =>
+      edges.filter(
         (edge) =>
           edge.source !== selectedNode.id && edge.target !== selectedNode.id
       )
