@@ -13,7 +13,7 @@ function IfElseNode({ data, isConnectable }: IfElseNodeProps) {
         isConnectable={isConnectable}
       />
       <div>
-        <h3 className="text-center">{data.label || "Action Node"}</h3>
+        <h3 className="text-center">{data.label || "If-Else Node"}</h3>
       </div>
       <Handle
         type="source"

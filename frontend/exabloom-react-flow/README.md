@@ -1,0 +1,13 @@
+# Setup instructions
+
+## How the application works
+
+## Assumptions
+
+## Challenges
+
+1. setting up custom add edge button's logic
+2. making node positions dynamic so that nodes/edges dont overlap each other
+3. passing data to Form
+
+## How I resolved challenges

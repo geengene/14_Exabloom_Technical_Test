@@ -97,10 +97,16 @@ const AddButtonEdge = memo((props: EdgeProps) => {
       {showMenu && (
         <div className="top-10 left-0 z-50 bg-white shadow-lg rounded-md p-3 border border-gray-200">
           <h5 className="text-center text-sm font-bold">Choose Node Type:</h5>
-          <Button onClick={() => handleNodeTypeSelection("actionNode")}>
+          <Button
+            onClick={() => handleNodeTypeSelection("actionNode")}
+            className="text-xs"
+          >
             Action Node
           </Button>
-          <Button onClick={() => handleNodeTypeSelection("ifElseNode")}>
+          <Button
+            onClick={() => handleNodeTypeSelection("ifElseNode")}
+            className="text-xs"
+          >
             If-Else Node
           </Button>
         </div>

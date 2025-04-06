@@ -35,8 +35,8 @@ export default function App() {
 
   const onConnect: OnConnect = useCallback(
     (connection) =>
-      setEdges((edges) =>
-        addEdge({ ...connection, type: "buttonEdge" }, edges)
+      setEdges(
+        (edges) => addEdge({ ...connection, type: "buttonEdge" }, edges) // sets all edges to be ButtonEdge
       ),
     [setEdges]
   );
