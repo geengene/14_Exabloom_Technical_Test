@@ -30,8 +30,8 @@ export interface NodeFormProps {
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState([...defaultNodes]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([...defaultEdges]);
-  const [selectedNode, setSelectedNode] = useState(null); // Track selected node
-  const [tempNodeName, setTempNodeName] = useState(""); // Temporary name for the selected node
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [tempNodeName, setTempNodeName] = useState("");
 
   const onConnect: OnConnect = useCallback(
     (connection) =>
