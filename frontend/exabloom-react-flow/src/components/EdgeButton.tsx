@@ -1,55 +1,50 @@
 import { EdgeProps, useReactFlow } from "@xyflow/react";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ButtonEdge } from "@/components/button-edge";
 
 const AddButtonEdge = memo((props: EdgeProps) => {
-  //memo compares difference between old and new EdgeProp and component will not execute if same
-  const { source, target, id } = props; // https://reactflow.dev/api-reference/types/edge-props extract edge properties, provides source of edges
-  const { getNode, setNodes, setEdges } = useReactFlow();
+  const { source, target, id } = props;
+  const { getNodes, getEdges, getNode, setNodes, setEdges } = useReactFlow();
+  const [showMenu, setShowMenu] = useState(false);
+  const [, setSelectedNodeType] = useState<"actionNode" | "ifElseNode" | null>(
+    null
+  );
 
   const onEdgeClick = () => {
+    setShowMenu(true); // Show the popup menu
+  };
+
+  const handleNodeTypeSelection = (nodeType: "actionNode" | "ifElseNode") => {
+    setSelectedNodeType(nodeType);
+    setShowMenu(false);
+
     const sourceNode = getNode(source);
     const targetNode = getNode(target);
-    console.log(sourceNode, targetNode);
 
-    if (!sourceNode || !targetNode) return null;
+    if (!sourceNode || !targetNode) return;
 
-    // midpoint between source and target
     const newNodePosition = {
       x: (sourceNode.position.x + targetNode.position.x) / 2,
       y: (sourceNode.position.y + targetNode.position.y) / 2,
     };
 
     const offset = 50;
-    // const updatedSourceNode = {
-    //   ...sourceNode,
-    //   position: {
-    //     x: sourceNode.position.x,
-    //     y: sourceNode.position.y - offset,
-    //   },
-    // };
-    // const updatedTargetNode = {
-    //   ...targetNode,
-    //   position: {
-    //     x: targetNode.position.x,
-    //     y: targetNode.position.y + offset,
-    //   },
-    // };
 
     const newNode = {
       id: `node-${Date.now()}`,
       position: newNodePosition,
-      data: { label: "New Action Node" },
-      type: "default",
+      data: {
+        label: nodeType === "actionNode" ? "Action Node" : "If-Else Node",
+      },
+      type: nodeType || "default",
     };
 
     setNodes((nodes) => {
       return nodes
         .map((node) => {
           if (node.position.y > newNodePosition.y) {
-            //if current node in the iteration is below than newNode, move it down
             return {
               ...node,
               position: {
@@ -68,35 +63,48 @@ const AddButtonEdge = memo((props: EdgeProps) => {
           }
           return node;
         })
-        .concat(newNode); // Add the new node
-    }); // TODO: change the position of old nodes to make space for new one
+        .concat(newNode);
+    });
 
     setEdges((edges) =>
       edges
-        .filter((edge) => edge.id !== id) // remove the current edge
+        .filter((edge) => edge.id !== id)
         .concat(
-          // add two new edges
           {
             id: `edge-${source}->${newNode.id}`,
-            source: source, // the original source of where original edge is connected to
-            target: newNode.id, // connects to edge of newNode
-            type: "buttonedge",
+            source: source,
+            target: newNode.id,
+            type: "buttonEdge",
           },
           {
             id: `edge-${newNode.id}->${target}`,
             source: newNode.id,
             target: target,
-            type: "buttonedge",
+            type: "buttonEdge",
           }
         )
     );
+    console.log(getNodes, getEdges);
   };
 
   return (
     <ButtonEdge {...props}>
-      <Button onClick={onEdgeClick} size="sm" variant="outline">
-        <Plus size={16} />
-      </Button>
+      {!showMenu && (
+        <Button onClick={onEdgeClick} size="sm" variant="outline">
+          <Plus size={16} />
+        </Button>
+      )}
+      {showMenu && (
+        <div className="top-10 left-0 z-50 bg-white shadow-lg rounded-md p-3 border border-gray-200">
+          <h5 className="text-center text-sm font-bold">Choose Node Type:</h5>
+          <Button onClick={() => handleNodeTypeSelection("actionNode")}>
+            Action Node
+          </Button>
+          <Button onClick={() => handleNodeTypeSelection("ifElseNode")}>
+            If-Else Node
+          </Button>
+        </div>
+      )}
     </ButtonEdge>
   );
 });

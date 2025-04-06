@@ -1,3 +1,5 @@
+import ActionNode from "@/components/ActionNode";
+import IfElseNode from "@/components/IfElseNode";
 import AddButtonEdge from "../components/EdgeButton";
 
 export const defaultNodes = [
@@ -14,14 +16,21 @@ export const defaultNodes = [
     data: { label: "End" },
   },
 ];
+
 export const defaultEdges = [
   {
     id: "start->end",
     source: "start",
     target: "end",
-    type: "buttonedge",
+    type: "buttonEdge",
   },
 ];
+
+export const nodeTypes = {
+  actionNode: ActionNode,
+  ifElseNode: IfElseNode,
+};
+
 export const edgeTypes = {
-  buttonedge: AddButtonEdge,
+  buttonEdge: AddButtonEdge,
 };
