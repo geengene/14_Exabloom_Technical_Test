@@ -22,6 +22,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
 
     const sourceNode = getNode(source);
     const targetNode = getNode(target);
+    console.log(sourceNode, targetNode);
 
     if (!sourceNode || !targetNode) return;
 
@@ -31,6 +32,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
     };
 
     const offset = 100;
+    const secondOffset = 200;
 
     if (nodeType === "ifElseNode") {
       const ifElseNode = {
@@ -44,26 +46,62 @@ const AddButtonEdge = memo((props: EdgeProps) => {
       const ifNode = {
         id: `ifBranch-${Date.now()}`,
         position: {
-          x: newNodePosition.x - 200,
+          x: newNodePosition.x - secondOffset,
           y: ifElseNode.position.y + offset,
         },
         data: { label: "Branch 1" },
-        type: "default",
+        type: "branchNode",
       };
       const elseNode = {
         id: `elseBranch-${Date.now()}`,
         position: {
-          x: newNodePosition.x + 200,
+          x: newNodePosition.x + secondOffset,
           y: ifElseNode.position.y + offset,
         },
         data: { label: "Else" },
-        type: "default",
+        type: "branchNode",
+      };
+      const newEndNode = {
+        id: `endNode-${Date.now()}`,
+        position: {
+          x: newNodePosition.x + secondOffset,
+          y: ifElseNode.position.y + offset + secondOffset,
+        },
+        data: { label: "End" },
+        type: "output",
       };
 
       setNodes((nodes) => {
         return nodes
           .map((node) => {
             if (node.position.y > newNodePosition.y) {
+              if (node.position.x < newNodePosition.x) {
+                return {
+                  ...node,
+                  position: {
+                    x: node.position.x - secondOffset,
+                    y: node.position.y + offset + 100,
+                  },
+                };
+              }
+              if (node.position.x > newNodePosition.x) {
+                return {
+                  ...node,
+                  position: {
+                    x: node.position.x + secondOffset,
+                    y: node.position.y + offset + 100,
+                  },
+                };
+              }
+              if (node.position.x === newNodePosition.x) {
+                return {
+                  ...node,
+                  position: {
+                    x: node.position.x - secondOffset,
+                    y: node.position.y + offset + 100,
+                  },
+                };
+              }
               return {
                 ...node,
                 position: {
@@ -71,7 +109,26 @@ const AddButtonEdge = memo((props: EdgeProps) => {
                   y: node.position.y + offset + 100,
                 },
               };
-            } else if (node.position.y < newNodePosition.y) {
+            }
+            if (node.position.y < newNodePosition.y) {
+              if (node.position.x > newNodePosition.x) {
+                return {
+                  ...node,
+                  position: {
+                    x: node.position.x + secondOffset,
+                    y: node.position.y - offset,
+                  },
+                };
+              }
+              if (node.position.x < newNodePosition.x) {
+                return {
+                  ...node,
+                  position: {
+                    x: node.position.x - secondOffset,
+                    y: node.position.y - offset,
+                  },
+                };
+              }
               return {
                 ...node,
                 position: {
@@ -82,7 +139,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
             }
             return node;
           })
-          .concat(ifElseNode, ifNode, elseNode);
+          .concat(ifElseNode, ifNode, elseNode, newEndNode);
       });
 
       setEdges((edges) =>
@@ -116,7 +173,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
             {
               id: `edge-${elseNode.id}->end-${Date.now()}`,
               source: elseNode.id,
-              target: `end-${Date.now()}`,
+              target: newEndNode.id,
               type: "buttonEdge",
             }
           )
