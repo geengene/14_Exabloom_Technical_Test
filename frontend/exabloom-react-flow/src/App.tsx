@@ -41,7 +41,10 @@ export default function App() {
     [setEdges]
   );
 
-  const onNodeClick = (event: object, node) => {
+  const onNodeClick = (event, node) => {
+    if (node.id === "start" || node.id === "end") {
+      return event.preventDefault();
+    }
     console.log(event, node);
     setSelectedNode(node); // Set the clicked node as the selected node
     setTempNodeName(node.data.label || ""); // Initialize the temporary name with the node's label
@@ -81,15 +84,42 @@ export default function App() {
   };
 
   const onDeleteNode = () => {
+    if (!selectedNode) return;
     setNodes((nodes) => nodes.filter((node) => node.id !== selectedNode.id));
-    setEdges(
-      (edges) =>
-        edges.filter(
-          (edge) =>
-            edge.source !== selectedNode.id && edge.target !== selectedNode.id
-        )
-      //TODO: connect the nodes that were connected to the deleted Node
-    );
+    setEdges((edges) => {
+      // Find edges connected to the deleted node
+      const connectedEdges = edges.filter(
+        (edge) =>
+          edge.source === selectedNode.id || edge.target === selectedNode.id
+      );
+
+      // Get the source and target nodes of the connected edges
+      const sourceEdge = connectedEdges.find(
+        (edge) => edge.target === selectedNode.id
+      );
+      const targetEdge = connectedEdges.find(
+        (edge) => edge.source === selectedNode.id
+      );
+
+      // Remove edges connected to the deleted node
+      const updatedEdges = edges.filter(
+        (edge) =>
+          edge.source !== selectedNode.id && edge.target !== selectedNode.id
+      );
+
+      // If both source and target edges exist, create a new edge between them
+      if (sourceEdge && targetEdge) {
+        const newEdge = {
+          id: `edge-${sourceEdge.source}-${targetEdge.target}`,
+          source: sourceEdge.source,
+          target: targetEdge.target,
+          type: "buttonEdge", // You can customize the edge type here
+        };
+        return [...updatedEdges, newEdge];
+      }
+
+      return updatedEdges;
+    });
     setSelectedNode(null);
   };
 

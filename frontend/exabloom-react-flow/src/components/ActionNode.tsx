@@ -6,7 +6,7 @@ interface ActionNodeProps {
 }
 function ActionNode({ data, isConnectable }: ActionNodeProps) {
   return (
-    <div className="h-fit w-fit text-wrap text-ellipsis min-w-[150px] max-w-[150px] border-2 border-black rounded-sm p-2 bg-slate-100">
+    <div className="h-fit w-fit text-wrap text-ellipsis min-w-[150px] max-w-[150px] border-2 border-black rounded-sm p-2 bg-green-100">
       <Handle
         type="target"
         position={Position.Top}

@@ -5,13 +5,13 @@ import AddButtonEdge from "../components/EdgeButton";
 export const defaultNodes = [
   {
     id: "start",
-    type: "default",
+    type: "input",
     position: { x: 0, y: 0 },
     data: { label: "Start" },
   },
   {
     id: "end",
-    type: "default",
+    type: "output",
     position: { x: 0, y: 200 },
     data: { label: "End" },
   },

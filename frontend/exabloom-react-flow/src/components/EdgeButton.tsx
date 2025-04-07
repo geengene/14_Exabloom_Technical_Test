@@ -13,7 +13,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
   );
 
   const onEdgeClick = () => {
-    setShowMenu(true); // Show the popup menu
+    setShowMenu(true);
   };
 
   const handleNodeTypeSelection = (nodeType: "actionNode" | "ifElseNode") => {
@@ -30,7 +30,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
       y: (sourceNode.position.y + targetNode.position.y) / 2,
     };
 
-    const offset = 50;
+    const offset = 75;
 
     const newNode = {
       id: `node-${Date.now()}`,
@@ -90,22 +90,27 @@ const AddButtonEdge = memo((props: EdgeProps) => {
   return (
     <ButtonEdge {...props}>
       {!showMenu && (
-        <Button onClick={onEdgeClick} size="sm" variant="outline">
-          <Plus size={16} />
+        <Button
+          onClick={onEdgeClick}
+          size="sm"
+          variant="outline"
+          className="p-2 rounded-full"
+        >
+          <Plus size={10} />
         </Button>
       )}
       {showMenu && (
-        <div className="top-10 left-0 z-50 bg-white shadow-lg rounded-md p-3 border border-gray-200">
+        <div className="top-10 left-0 z-50 bg-white shadow-lg rounded-md p-2 border border-gray-200">
           <h5 className="text-center text-sm font-bold">Choose Node Type:</h5>
           <Button
             onClick={() => handleNodeTypeSelection("actionNode")}
-            className="text-xs"
+            className="text-xs p-2 mr-1"
           >
             Action Node
           </Button>
           <Button
             onClick={() => handleNodeTypeSelection("ifElseNode")}
-            className="text-xs"
+            className="text-xs p-2"
           >
             If-Else Node
           </Button>
