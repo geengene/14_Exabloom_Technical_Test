@@ -80,7 +80,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
                   ...node,
                   position: {
                     x: node.position.x - secondOffset,
-                    y: node.position.y + offset + 100,
+                    y: node.position.y + secondOffset,
                   },
                 };
               }
@@ -89,7 +89,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
                   ...node,
                   position: {
                     x: node.position.x + secondOffset,
-                    y: node.position.y + offset + 100,
+                    y: node.position.y + secondOffset,
                   },
                 };
               }
@@ -98,7 +98,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
                   ...node,
                   position: {
                     x: node.position.x - secondOffset,
-                    y: node.position.y + offset + 100,
+                    y: node.position.y + secondOffset,
                   },
                 };
               }
@@ -106,7 +106,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
                 ...node,
                 position: {
                   ...node.position,
-                  y: node.position.y + offset + 100,
+                  y: node.position.y + secondOffset,
                 },
               };
             }

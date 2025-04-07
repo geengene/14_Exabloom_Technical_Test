@@ -167,7 +167,6 @@ export default function App() {
       nodes
         .map((node) => {
           if (node.position.x < newBranchNode.position.x) {
-            console.log("if");
             return {
               ...node,
               position: {
@@ -189,7 +188,6 @@ export default function App() {
             node.position.x === newBranchNode.position.x &&
             !(node.position.y < newBranchNode.position.y)
           ) {
-            console.log("elseif");
             return {
               ...node,
               position: {
@@ -259,6 +257,7 @@ export default function App() {
         (node) => node.id !== branchId
       ),
     })); // update connectedNodes of the selectedNode
+    setBranchCount((prevCount) => prevCount - 1);
   };
 
   return (
