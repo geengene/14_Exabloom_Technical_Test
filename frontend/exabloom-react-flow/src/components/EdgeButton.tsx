@@ -59,7 +59,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
           y: ifElseNode.position.y + offset,
         },
         data: { label: "Else" },
-        type: "branchNode",
+        type: "elseNode",
       };
       const newEndNode = {
         id: `endNode-${Date.now()}`,

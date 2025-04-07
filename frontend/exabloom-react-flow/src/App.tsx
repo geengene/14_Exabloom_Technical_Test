@@ -8,6 +8,7 @@ import {
   type OnConnect,
   ReactFlowProvider,
   Node,
+  getOutgoers,
 } from "@xyflow/react";
 import { DevTools } from "./components/devtools";
 import "@xyflow/react/dist/style.css";
@@ -45,14 +46,11 @@ export default function App() {
   );
 
   const getConnectedNodes = (nodeId: string) => {
-    const connectedEdges = edges.filter((edge) => edge.source === nodeId); // all edges where the node is the source
+    const sourceNode = nodes.find((node) => node.id === nodeId); // find the source node
+    if (!sourceNode) return [];
 
-    const connectedNodeIds = connectedEdges.map((edge) => edge.target); // id of the connected nodes
-
-    const connectedNodes = nodes.filter(
-      (node) => connectedNodeIds.includes(node.id) // find actual nodes using their IDs
-    );
-
+    const connectedNodes = getOutgoers(sourceNode, nodes, edges); // find connected nodes
+    console.log(connectedNodes);
     return connectedNodes;
   };
 

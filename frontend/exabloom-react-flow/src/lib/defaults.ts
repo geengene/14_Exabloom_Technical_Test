@@ -2,6 +2,7 @@ import ActionNode from "@/components/ActionNode";
 import IfElseNode from "@/components/IfElseNode";
 import AddButtonEdge from "@/components/EdgeButton";
 import BranchNode from "@/components/BranchNode";
+import ElseNode from "@/components/ElseNode";
 
 export const defaultNodes = [
   {
@@ -31,6 +32,7 @@ export const nodeTypes = {
   actionNode: ActionNode,
   ifElseNode: IfElseNode,
   branchNode: BranchNode,
+  elseNode: ElseNode,
 };
 
 export const edgeTypes = {

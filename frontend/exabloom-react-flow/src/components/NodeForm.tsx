@@ -59,25 +59,45 @@ const NodeForm = memo(
           {selectedNode.type === "ifElseNode" && (
             <div className="mb-8">
               <h3 className="font-bold">Branches: ({branchCount})</h3>
-              {selectedNode.connectedNodes.map((node) => (
-                <div key={node.id} className="flex justify-center ">
-                  <Input
-                    value={node.data.label || ""}
-                    onChange={(e) =>
-                      onBranchNameChange(node.id, e.target.value)
-                    }
-                    className="mt-1 mb-1 mr-2 self-center bg-white"
-                  />
-                  <Trash2
-                    className="self-center cursor-pointer"
-                    onClick={() => onDeleteBranch(node.id)}
-                  />
-                </div>
-              ))}
+              {selectedNode.connectedNodes
+                .filter((node) => node.type !== "elseNode")
+                .map((node) => (
+                  <div key={node.id} className="flex justify-center ">
+                    <Input
+                      value={node.data.label || ""}
+                      onChange={(e) =>
+                        onBranchNameChange(node.id, e.target.value)
+                      }
+                      className="mt-1 mb-1 mr-2 self-center bg-white"
+                    />
+                    <Trash2
+                      className="self-center cursor-pointer"
+                      onClick={() => onDeleteBranch(node.id)}
+                    />
+                  </div>
+                ))}
               <Button variant="ghost" onClick={onAddBranch} className="">
                 <Plus />
                 Add Branch
               </Button>
+              <h3 className="font-bold">Else</h3>
+              {selectedNode.connectedNodes
+                .filter((node) => node.type !== "branchNode")
+                .map((node) => (
+                  <div key={node.id} className="flex justify-center ">
+                    <Input
+                      value={node.data.label || ""}
+                      onChange={(e) =>
+                        onBranchNameChange(node.id, e.target.value)
+                      }
+                      className="mt-1 mb-1 mr-2 self-center bg-white"
+                    />
+                    {/* <Trash2
+                      className="self-center cursor-pointer"
+                      onClick={() => onDeleteBranch(node.id)}
+                    /> */}
+                  </div>
+                ))}
             </div>
           )}
           <div className="flex justify-between items-center">
