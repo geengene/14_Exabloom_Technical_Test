@@ -34,6 +34,7 @@ export default function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([...defaultEdges]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [tempNodeName, setTempNodeName] = useState("");
+  const [branchCount, setBranchCount] = useState(0);
 
   const onConnect: OnConnect = useCallback(
     (connection) =>
@@ -64,6 +65,7 @@ export default function App() {
 
     setSelectedNode({ ...node, connectedNodes });
     setTempNodeName(node.data.label || "");
+    setBranchCount(connectedNodes.length - 1);
     // TODO: if no node selected, close the form
   };
 
@@ -150,19 +152,29 @@ export default function App() {
         x: selectedNode.position.x,
         y: selectedNode.position.y + 100, // position below the ifElseNode
       },
-      data: { label: "New Branch" },
+      data: { label: `Branch ${branchCount + 1}` },
       type: "branchNode",
+    };
+    const newEndNode = {
+      id: `endNode-${Date.now()}`,
+      position: {
+        x: newBranchNode.position.x,
+        y: newBranchNode.position.y + 200, // position below the ifElseNode
+      },
+      data: { label: "End" },
+      type: "output",
     };
 
     setNodes((nodes) =>
       nodes
         .map((node) => {
           if (node.position.x < newBranchNode.position.x) {
+            console.log("if");
             return {
               ...node,
               position: {
                 ...node.position,
-                x: node.position.x - 200, // Move node 100px to the left
+                x: node.position.x - 200, // move node 100px to the left
               },
             };
           }
@@ -177,9 +189,9 @@ export default function App() {
           // }
           else if (
             node.position.x === newBranchNode.position.x &&
-            node.type === "branchNode" &&
             !(node.position.y < newBranchNode.position.y)
           ) {
+            console.log("elseif");
             return {
               ...node,
               position: {
@@ -190,16 +202,22 @@ export default function App() {
           }
           return node;
         })
-        .concat(newBranchNode)
+        .concat(newBranchNode, newEndNode)
     );
 
     setEdges((edges) => [
       ...edges,
       {
-        id: `edge-${selectedNode.id}-${newBranchNode.id}`,
+        id: `edge-${selectedNode.id}->${newBranchNode.id}`,
         source: selectedNode.id,
         target: newBranchNode.id,
         type: "smoothstep",
+      },
+      {
+        id: `edge-${newBranchNode.id}->${newEndNode.id}`,
+        source: newBranchNode.id,
+        target: newEndNode.id,
+        type: "buttonEdge",
       },
     ]);
 
@@ -207,6 +225,7 @@ export default function App() {
       ...prev,
       connectedNodes: [...(prev.connectedNodes || []), newBranchNode],
     }));
+    setBranchCount((prevCount) => prevCount + 1);
   };
 
   const onBranchNameChange = (branchId: string, newName: string) => {
@@ -225,6 +244,23 @@ export default function App() {
           : node
       ),
     }));
+  };
+
+  const onDeleteBranch = (branchId: string) => {
+    setNodes((nodes) => nodes.filter((node) => node.id !== branchId)); // remove branch node from the nodes state
+
+    setEdges((edges) =>
+      edges.filter(
+        (edge) => edge.source !== branchId && edge.target !== branchId
+      )
+    ); // remove edges connected to the branch node
+
+    setSelectedNode((prev) => ({
+      ...prev,
+      connectedNodes: prev.connectedNodes.filter(
+        (node) => node.id !== branchId
+      ),
+    })); // update connectedNodes of the selectedNode
   };
 
   return (
@@ -250,12 +286,14 @@ export default function App() {
         <NodeForm
           selectedNode={selectedNode}
           tempNodeName={tempNodeName}
+          branchCount={branchCount}
           onNodeNameChange={onNodeNameChange}
           onDeleteNode={onDeleteNode}
           onSaveNode={onSaveNode}
           onCloseForm={onCloseForm}
           onAddBranch={onAddBranch}
           onBranchNameChange={onBranchNameChange}
+          onDeleteBranch={onDeleteBranch}
         />
       </div>
     </ReactFlowProvider>

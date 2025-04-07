@@ -5,6 +5,7 @@
 ## Assumptions
 
 1. assuming for if/else node, if creates a branch with existing "children" nodes(existing nodes below the if/else node), and else will create a new branch/path with the else node + end node.
+2. assumed that deleting a branch only deletes the branch node itself and not its child nodes
 
 ## Challenges
 

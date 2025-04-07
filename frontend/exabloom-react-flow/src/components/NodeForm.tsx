@@ -1,5 +1,5 @@
-import { Node, NodeProps } from "@xyflow/react";
-import { CircleX, Plus } from "lucide-react";
+import { NodeProps } from "@xyflow/react";
+import { CircleX, Plus, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input";
 import { memo } from "react";
@@ -14,6 +14,8 @@ interface NodeFormProps {
   onAddBranch: () => void;
   connectedNodes?: NodeProps[];
   onBranchNameChange: (branchId: string, newName: string) => void;
+  onDeleteBranch: (branchId: string) => void;
+  branchCount: number;
 }
 
 const NodeForm = memo(
@@ -26,6 +28,8 @@ const NodeForm = memo(
     onCloseForm,
     onAddBranch,
     onBranchNameChange,
+    onDeleteBranch,
+    branchCount,
   }: NodeFormProps) => {
     if (!selectedNode) return null;
 
@@ -54,15 +58,19 @@ const NodeForm = memo(
           </label>
           {selectedNode.type === "ifElseNode" && (
             <div className="mb-8">
-              <h3 className="font-bold">Branches</h3>
+              <h3 className="font-bold">Branches: ({branchCount})</h3>
               {selectedNode.connectedNodes.map((node) => (
-                <div key={node.id}>
+                <div key={node.id} className="flex justify-center ">
                   <Input
                     value={node.data.label || "Unnamed Node"}
                     onChange={(e) =>
                       onBranchNameChange(node.id, e.target.value)
                     }
-                    className="mb-2"
+                    className="mt-1 mb-1 mr-2 self-center bg-white"
+                  />
+                  <Trash2
+                    className="self-center cursor-pointer"
+                    onClick={() => onDeleteBranch(node.id)}
                   />
                 </div>
               ))}
