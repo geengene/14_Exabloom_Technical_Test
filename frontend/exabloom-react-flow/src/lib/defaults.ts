@@ -1,6 +1,6 @@
 import ActionNode from "@/components/ActionNode";
 import IfElseNode from "@/components/IfElseNode";
-import AddButtonEdge from "../components/EdgeButton";
+import AddButtonEdge from "@/components/EdgeButton";
 
 export const defaultNodes = [
   {

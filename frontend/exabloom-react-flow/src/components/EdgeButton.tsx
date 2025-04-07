@@ -30,7 +30,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
       y: (sourceNode.position.y + targetNode.position.y) / 2,
     };
 
-    const offset = 75;
+    const offset = 100;
 
     if (nodeType === "ifElseNode") {
       const ifElseNode = {
@@ -42,19 +42,19 @@ const AddButtonEdge = memo((props: EdgeProps) => {
         type: nodeType || "default",
       };
       const ifNode = {
-        id: `branch1-${Date.now()}`,
+        id: `ifBranch-${Date.now()}`,
         position: {
-          x: newNodePosition.x - 100,
-          y: newNodePosition.y + offset + 50,
+          x: newNodePosition.x - 200,
+          y: ifElseNode.position.y + offset,
         },
         data: { label: "Branch 1" },
         type: "default",
       };
       const elseNode = {
-        id: `branch2-${Date.now()}`,
+        id: `elseBranch-${Date.now()}`,
         position: {
-          x: newNodePosition.x + 100,
-          y: newNodePosition.y + offset + 50,
+          x: newNodePosition.x + 200,
+          y: ifElseNode.position.y + offset,
         },
         data: { label: "Else" },
         type: "default",
@@ -68,7 +68,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
                 ...node,
                 position: {
                   ...node.position,
-                  y: node.position.y + ifNode.position.y,
+                  y: node.position.y + offset + 100,
                 },
               };
             } else if (node.position.y < newNodePosition.y) {
@@ -121,7 +121,6 @@ const AddButtonEdge = memo((props: EdgeProps) => {
             }
           )
       );
-
       return;
     }
 
@@ -179,6 +178,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
           )
       );
     }
+    return;
   };
 
   return (

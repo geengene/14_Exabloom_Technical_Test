@@ -1,6 +1,7 @@
 import { Node } from "@xyflow/react";
-import { CircleX } from "lucide-react";
+import { CircleX, Plus } from "lucide-react";
 import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
 
 interface NodeFormProps {
   selectedNode: Node | null;
@@ -38,17 +39,20 @@ export default function NodeForm({
       <div className="p-5">
         <label>
           Action Name:
-          <input
+          <Input
             type="text"
             value={tempNodeName}
             onChange={onNodeNameChange}
-            className="w-full mt-1 mb-8 p-2 border border-solid border-black"
+            className="mt-1 mb-8 p-2 border border-solid border-black bg-white"
           />
         </label>
         {selectedNode.type === "ifElseNode" && (
-          <div>
+          <div className="mb-8">
             <h3>Branches</h3>
-            <Button>Add Branch</Button>
+            <Button variant="ghost">
+              <Plus />
+              Add Branch
+            </Button>
           </div>
         )}
         <div className="flex justify-between items-center">

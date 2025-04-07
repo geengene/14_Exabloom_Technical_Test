@@ -47,14 +47,14 @@ export default function App() {
       return event.preventDefault();
     }
     console.log(event, node);
-    setSelectedNode(node); // Set the clicked node as the selected node
-    setTempNodeName(node.data.label || ""); // Initialize the temporary name with the node's label
+    setSelectedNode(node); // sets clicked node as the selected node
+    setTempNodeName(node.data.label || ""); // init temporary name with the node's label
     // TODO: if no node selected, close the form
   };
 
   const onNodeNameChange = (e) => {
     const newName = e.target.value;
-    setTempNodeName(newName); // Update the temporary name
+    setTempNodeName(newName);
   };
 
   const onSaveNode = () => {
@@ -67,14 +67,13 @@ export default function App() {
               ...node,
               data: {
                 ...node.data,
-                label: tempNodeName || "", // Update the label with the temporary name
+                label: tempNodeName || "", // update label with temporary name
               },
             }
           : node
       )
     );
 
-    // Update the selectedNode's label to reflect the change
     setSelectedNode((prev) => ({
       ...prev,
       data: {
@@ -88,13 +87,12 @@ export default function App() {
     if (!selectedNode) return;
     setNodes((nodes) => nodes.filter((node) => node.id !== selectedNode.id));
     setEdges((edges) => {
-      // Find edges connected to the deleted node
+      // edges connected to the deleted node
       const connectedEdges = edges.filter(
         (edge) =>
           edge.source === selectedNode.id || edge.target === selectedNode.id
       );
 
-      // Get the source and target nodes of the connected edges
       const sourceEdge = connectedEdges.find(
         (edge) => edge.target === selectedNode.id
       );
@@ -102,19 +100,19 @@ export default function App() {
         (edge) => edge.source === selectedNode.id
       );
 
-      // Remove edges connected to the deleted node
+      // remove edges connected to the deleted node
       const updatedEdges = edges.filter(
         (edge) =>
           edge.source !== selectedNode.id && edge.target !== selectedNode.id
       );
 
-      // If both source and target edges exist, create a new edge between them
+      // create a new edge between source and target handles
       if (sourceEdge && targetEdge) {
         const newEdge = {
           id: `edge-${sourceEdge.source}-${targetEdge.target}`,
           source: sourceEdge.source,
           target: targetEdge.target,
-          type: "buttonEdge", // You can customize the edge type here
+          type: "buttonEdge",
         };
         return [...updatedEdges, newEdge];
       }
@@ -138,7 +136,7 @@ export default function App() {
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
-          onNodeClick={onNodeClick} // Handle node click
+          onNodeClick={onNodeClick}
           onConnect={onConnect}
           fitView
         >

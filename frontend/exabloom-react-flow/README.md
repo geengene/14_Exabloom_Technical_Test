@@ -9,7 +9,7 @@
 ## Challenges
 
 1. setting up custom add edge button's logic
-2. making node positions dynamic so that nodes/edges dont overlap each other
+2. making node positions dynamic so that nodes/edges don't overlap each other esp for if-else node
 3. passing data to Form
 
 ## How I resolved challenges
