@@ -32,59 +32,129 @@ const AddButtonEdge = memo((props: EdgeProps) => {
 
     const offset = 75;
 
-    const newNode = {
-      id: `node-${Date.now()}`,
-      position: newNodePosition,
-      data: {
-        label: nodeType === "actionNode" ? "Action Node" : "If-Else Node",
-      },
-      type: nodeType || "default",
-    };
+    if (nodeType === "ifElseNode") {
+      const ifELseNode = {
+        id: `node-${Date.now()}`,
+        position: newNodePosition,
+        data: {
+          label: "If-Else Node",
+        },
+        type: nodeType || "default",
+      };
+      const ifNode = {
+        id: `branch1-${Date.now()}`,
+        position: {
+          x: newNodePosition.x - 100,
+          y: newNodePosition.y + offset,
+        },
+        data: { label: "Branch 1" },
+        type: "default",
+      };
+      const elseNode = {
+        id: `branch2-${Date.now()}`,
+        position: {
+          x: newNodePosition.x + 100,
+          y: newNodePosition.y + offset,
+        },
+        data: { label: "Else" },
+        type: "default",
+      };
 
-    setNodes((nodes) => {
-      return nodes
-        .map((node) => {
-          if (node.position.y > newNodePosition.y) {
-            return {
-              ...node,
-              position: {
-                ...node.position,
-                y: node.position.y + offset,
-              },
-            };
-          } else if (node.position.y < newNodePosition.y) {
-            return {
-              ...node,
-              position: {
-                ...node.position,
-                y: node.position.y - offset,
-              },
-            };
-          }
-          return node;
-        })
-        .concat(newNode);
-    });
+      setNodes((nodes) => [...nodes, ifELseNode, ifNode, elseNode]);
 
-    setEdges((edges) =>
-      edges
-        .filter((edge) => edge.id !== id)
-        .concat(
-          {
-            id: `edge-${source}->${newNode.id}`,
-            source: source,
-            target: newNode.id,
-            type: "buttonEdge",
-          },
-          {
-            id: `edge-${newNode.id}->${target}`,
-            source: newNode.id,
-            target: target,
-            type: "buttonEdge",
-          }
-        )
-    );
-    console.log(getNodes, getEdges);
+      setEdges((edges) =>
+        edges
+          .filter((edge) => edge.id !== id)
+          .concat(
+            {
+              id: `edge-${source}->${ifELseNode.id}`,
+              source: source,
+              target: ifELseNode.id,
+              type: "buttonEdge",
+            },
+            {
+              id: `edge-${ifELseNode.id}->${ifNode.id}`,
+              source: ifELseNode.id,
+              target: ifNode.id,
+            },
+            {
+              id: `edge-${ifELseNode.id}->${elseNode.id}`,
+              source: ifELseNode.id,
+              target: elseNode.id,
+            },
+            {
+              id: `edge-${ifNode.id}->${target}`,
+              source: ifNode.id,
+              target: target,
+              type: "buttonEdge",
+            },
+            {
+              id: `edge-${elseNode.id}->end-${Date.now()}`,
+              source: elseNode.id,
+              target: `end-${Date.now()}`,
+              type: "buttonEdge",
+            }
+          )
+      );
+
+      return;
+    }
+
+    if (nodeType === "actionNode") {
+      const newNode = {
+        id: `node-${Date.now()}`,
+        position: newNodePosition,
+        data: {
+          label: nodeType === "actionNode" ? "Action Node" : "If-Else Node",
+        },
+        type: nodeType || "default",
+      };
+
+      setNodes((nodes) => {
+        return nodes
+          .map((node) => {
+            if (node.position.y > newNodePosition.y) {
+              return {
+                ...node,
+                position: {
+                  ...node.position,
+                  y: node.position.y + offset,
+                },
+              };
+            } else if (node.position.y < newNodePosition.y) {
+              return {
+                ...node,
+                position: {
+                  ...node.position,
+                  y: node.position.y - offset,
+                },
+              };
+            }
+            return node;
+          })
+          .concat(newNode);
+      });
+
+      setEdges((edges) =>
+        edges
+          .filter((edge) => edge.id !== id)
+          .concat(
+            {
+              id: `edge-${source}->${newNode.id}`,
+              source: source,
+              target: newNode.id,
+              type: "buttonEdge",
+            },
+            {
+              id: `edge-${newNode.id}->${target}`,
+              source: newNode.id,
+              target: target,
+              type: "buttonEdge",
+            }
+          )
+      );
+      console.log(getNodes, getEdges);
+    }
   };
 
   return (

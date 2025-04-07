@@ -42,7 +42,8 @@ export default function App() {
   );
 
   const onNodeClick = (event, node) => {
-    if (node.id === "start" || node.id === "end") {
+    if (node.type !== "actionNode" && node.type !== "ifElseNode") {
+      // cant access NodeForm for anything but actionNode and ifElseNode types
       return event.preventDefault();
     }
     console.log(event, node);
