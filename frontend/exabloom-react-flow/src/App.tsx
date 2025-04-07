@@ -26,7 +26,7 @@ export interface NodeFormProps {
   onNodeNameChange: (e: any) => void;
   onDeleteNode: () => void;
   onSaveNode: () => void;
-  onCloseForm: () => void; // Add the missing property
+  onCloseForm: () => void;
 }
 
 export default function App() {
@@ -174,7 +174,7 @@ export default function App() {
               ...node,
               position: {
                 ...node.position,
-                x: node.position.x - 200, // move node 100px to the left
+                x: node.position.x - 200,
               },
             };
           }
