@@ -45,6 +45,12 @@ export default function NodeForm({
             className="w-full mt-1 mb-8 p-2 border border-solid border-black"
           />
         </label>
+        {selectedNode.type === "ifElseNode" && (
+          <div>
+            <h3>Branches</h3>
+            <Button>Add Branch</Button>
+          </div>
+        )}
         <div className="flex justify-between items-center">
           <Button variant="destructive" onClick={onDeleteNode}>
             Delete

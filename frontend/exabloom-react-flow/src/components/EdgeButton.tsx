@@ -6,7 +6,7 @@ import { ButtonEdge } from "@/components/button-edge";
 
 const AddButtonEdge = memo((props: EdgeProps) => {
   const { source, target, id } = props;
-  const { getNodes, getEdges, getNode, setNodes, setEdges } = useReactFlow();
+  const { getNode, setNodes, setEdges } = useReactFlow();
   const [showMenu, setShowMenu] = useState(false);
   const [, setSelectedNodeType] = useState<"actionNode" | "ifElseNode" | null>(
     null
@@ -33,7 +33,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
     const offset = 75;
 
     if (nodeType === "ifElseNode") {
-      const ifELseNode = {
+      const ifElseNode = {
         id: `node-${Date.now()}`,
         position: newNodePosition,
         data: {
@@ -45,7 +45,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
         id: `branch1-${Date.now()}`,
         position: {
           x: newNodePosition.x - 100,
-          y: newNodePosition.y + offset,
+          y: newNodePosition.y + offset + 50,
         },
         data: { label: "Branch 1" },
         type: "default",
@@ -54,33 +54,58 @@ const AddButtonEdge = memo((props: EdgeProps) => {
         id: `branch2-${Date.now()}`,
         position: {
           x: newNodePosition.x + 100,
-          y: newNodePosition.y + offset,
+          y: newNodePosition.y + offset + 50,
         },
         data: { label: "Else" },
         type: "default",
       };
 
-      setNodes((nodes) => [...nodes, ifELseNode, ifNode, elseNode]);
+      setNodes((nodes) => {
+        return nodes
+          .map((node) => {
+            if (node.position.y > newNodePosition.y) {
+              return {
+                ...node,
+                position: {
+                  ...node.position,
+                  y: node.position.y + ifNode.position.y,
+                },
+              };
+            } else if (node.position.y < newNodePosition.y) {
+              return {
+                ...node,
+                position: {
+                  ...node.position,
+                  y: node.position.y - offset,
+                },
+              };
+            }
+            return node;
+          })
+          .concat(ifElseNode, ifNode, elseNode);
+      });
 
       setEdges((edges) =>
         edges
           .filter((edge) => edge.id !== id)
           .concat(
             {
-              id: `edge-${source}->${ifELseNode.id}`,
+              id: `edge-${source}->${ifElseNode.id}`,
               source: source,
-              target: ifELseNode.id,
+              target: ifElseNode.id,
               type: "buttonEdge",
             },
             {
-              id: `edge-${ifELseNode.id}->${ifNode.id}`,
-              source: ifELseNode.id,
+              id: `edge-${ifElseNode.id}->${ifNode.id}`,
+              source: ifElseNode.id,
               target: ifNode.id,
+              type: "smoothstep",
             },
             {
-              id: `edge-${ifELseNode.id}->${elseNode.id}`,
-              source: ifELseNode.id,
+              id: `edge-${ifElseNode.id}->${elseNode.id}`,
+              source: ifElseNode.id,
               target: elseNode.id,
+              type: "smoothstep",
             },
             {
               id: `edge-${ifNode.id}->${target}`,
@@ -153,7 +178,6 @@ const AddButtonEdge = memo((props: EdgeProps) => {
             }
           )
       );
-      console.log(getNodes, getEdges);
     }
   };
 
