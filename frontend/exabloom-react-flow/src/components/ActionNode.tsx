@@ -13,7 +13,7 @@ function ActionNode({ data, isConnectable }: ActionNodeProps) {
         isConnectable={isConnectable}
       />
       <div>
-        <h3 className="text-center">{data.label || "Action Node"}</h3>
+        <h3 className="text-center">{data.label || "Action"}</h3>
       </div>
       <Handle
         type="source"

@@ -150,7 +150,7 @@ export default function App() {
         x: selectedNode.position.x,
         y: selectedNode.position.y + 100, // position below the ifElseNode
       },
-      data: { label: `Branch ${branchCount + 1}` },
+      data: { label: `Branch #${branchCount + 1}` },
       type: "branchNode",
     };
     const newEndNode = {

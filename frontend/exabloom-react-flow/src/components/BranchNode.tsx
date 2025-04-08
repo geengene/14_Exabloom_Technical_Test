@@ -13,7 +13,7 @@ function BranchNode({ data, isConnectable }: BranchNodeProps) {
         isConnectable={isConnectable}
       />
       <div>
-        <h3 className="text-center">{data.label || "Branch Node"}</h3>
+        <h3 className="text-center">{data.label || "Branch"}</h3>
       </div>
       <Handle
         type="source"
