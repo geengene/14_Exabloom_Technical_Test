@@ -7,7 +7,8 @@ import {
   useEdgesState,
   type OnConnect,
   ReactFlowProvider,
-  Node,
+  type Node,
+  type Edge,
   getOutgoers,
 } from "@xyflow/react";
 import { DevTools } from "./components/devtools";
@@ -31,9 +32,13 @@ export interface NodeFormProps {
 }
 
 export default function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([...defaultNodes]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([...defaultEdges]);
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([
+    ...defaultNodes,
+  ]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([
+    ...defaultEdges,
+  ]);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [tempNodeName, setTempNodeName] = useState("");
   const [branchCount, setBranchCount] = useState(0);
 
@@ -89,13 +94,16 @@ export default function App() {
       )
     );
 
-    setSelectedNode((prev) => ({
-      ...prev,
-      data: {
-        ...prev.data,
-        label: tempNodeName || "",
-      },
-    }));
+    setSelectedNode((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          label: tempNodeName || "",
+        },
+      };
+    });
   };
 
   const onDeleteNode = () => {
@@ -217,10 +225,13 @@ export default function App() {
       },
     ]);
 
-    setSelectedNode((prev) => ({
-      ...prev,
-      connectedNodes: [...(prev.connectedNodes || []), newBranchNode],
-    }));
+    setSelectedNode((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        connectedNodes: [...(prev.connectedNodes || []), newBranchNode],
+      };
+    });
     setBranchCount((prevCount) => prevCount + 1);
   };
 
@@ -232,14 +243,17 @@ export default function App() {
           : node
       )
     );
-    setSelectedNode((prev) => ({
-      ...prev,
-      connectedNodes: prev.connectedNodes.map((node) =>
-        node.id === branchId
-          ? { ...node, data: { ...node.data, label: newName } }
-          : node
-      ),
-    }));
+    setSelectedNode((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        connectedNodes: prev.connectedNodes.map((node: Node) =>
+          node.id === branchId
+            ? { ...node, data: { ...node.data, label: newName } }
+            : node
+        ),
+      };
+    });
   };
 
   const onDeleteBranch = (branchId: string) => {
@@ -251,12 +265,15 @@ export default function App() {
       )
     ); // remove edges connected to the branch node
 
-    setSelectedNode((prev) => ({
-      ...prev,
-      connectedNodes: prev.connectedNodes.filter(
-        (node) => node.id !== branchId
-      ),
-    })); // update connectedNodes of the selectedNode
+    setSelectedNode((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        connectedNodes: prev.connectedNodes.filter(
+          (node: Node) => node.id !== branchId
+        ),
+      };
+    }); // update connectedNodes of the selectedNode
     setBranchCount((prevCount) => prevCount - 1);
   };
 

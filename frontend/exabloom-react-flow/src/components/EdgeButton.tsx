@@ -74,7 +74,7 @@ const AddButtonEdge = memo((props: EdgeProps) => {
       setNodes((nodes) => {
         return nodes
           .map((node) => {
-            if (node.position.y > newNodePosition.y) {
+            if (node.position.y >= newNodePosition.y) {
               if (node.position.x < newNodePosition.x) {
                 return {
                   ...node,
