@@ -68,7 +68,6 @@ async function loadMessageContent() {
 }
 
 async function insertContacts() {
-  console.log("Inserting contacts...");
   for (let i = 0; i < TOTAL_CONTACTS; i += BATCH_SIZE) {
     const values = [];
     for (let j = 0; j < BATCH_SIZE; j++) {
@@ -88,7 +87,6 @@ async function insertContacts() {
 }
 
 async function insertMessages(messagePool) {
-  console.log("Inserting messages...");
   for (let i = 0; i < TOTAL_MESSAGES; i += BATCH_SIZE) {
     const values = [];
     for (let j = 0; j < BATCH_SIZE; j++) {
