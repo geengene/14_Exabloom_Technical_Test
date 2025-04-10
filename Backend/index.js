@@ -156,7 +156,6 @@ app.get("/recent-conversations", async (req, res) => {
       LIMIT $1 OFFSET $2;
     `;
     const result = await db.query(query, [limit, offset, searchValue]);
-    res.render("conversations.ejs");
     res.json(result.rows);
   } catch (err) {
     console.error(err);
