@@ -16,11 +16,10 @@ const db = new pg.Client({
   password: process.env.PG_PASSWORD,
   port: process.env.PG_PORT,
 });
-db.connect();
+db.connect(); // init connection to database
 
 db.query(
   `
--- contacts table
 CREATE TABLE IF NOT EXISTS contacts (
   id SERIAL PRIMARY KEY,
   phone_number VARCHAR NOT NULL,
@@ -28,7 +27,6 @@ CREATE TABLE IF NOT EXISTS contacts (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- messages table
 CREATE TABLE IF NOT EXISTS messages (
     id SERIAL PRIMARY KEY,
     contact_id INTEGER NOT NULL,
@@ -39,7 +37,7 @@ CREATE TABLE IF NOT EXISTS messages (
       REFERENCES contacts(id)
       ON DELETE CASCADE
 );`
-);
+); // create tables based on schema provided
 
 const BATCH_SIZE = 5000;
 const TOTAL_CONTACTS = 100000;
