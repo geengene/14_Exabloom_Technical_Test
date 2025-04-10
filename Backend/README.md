@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. git clone this repo into your local machine, the repo contains both the front and back end technical test.
+1. git clone this repo into your local machine, the repo contains both the front and back end technical test. `https://github.com/geengene/14_Exabloom_Technical_Test.git`
 2. `cd` into `/Backend` and run `npm i` to install dependencies in package.json file
 3. in pgadmin4, create a local database named "exabloom"
 4. create an `.env` file at `/Backend/.env` path to contain all environment variables eg. :
