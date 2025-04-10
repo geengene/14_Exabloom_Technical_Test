@@ -62,7 +62,7 @@ const NodeForm = memo(
               {selectedNode.connectedNodes
                 .filter((node) => node.type !== "elseNode")
                 .map((node) => (
-                  <div key={node.id} className="flex justify-center ">
+                  <div key={node.id} className="flex justify-center">
                     <Input
                       value={node.data.label || ""}
                       onChange={(e) =>
@@ -76,10 +76,12 @@ const NodeForm = memo(
                     />
                   </div>
                 ))}
-              <Button variant="ghost" onClick={onAddBranch} className="">
-                <Plus />
-                Add Branch
-              </Button>
+              <div className="flex justify-end">
+                <Button variant="ghost" onClick={onAddBranch}>
+                  <Plus />
+                  Add Branch
+                </Button>
+              </div>
               <h3 className="font-bold">Else</h3>
               {selectedNode.connectedNodes
                 .filter((node) => node.type !== "branchNode")
