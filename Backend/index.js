@@ -78,10 +78,10 @@ async function insertContacts() {
     const query = `
       INSERT INTO contacts (phone_number, created_at, updated_at)
       VALUES ${values
-        .map((_, idx) => `($${idx * 3 + 1}, $${idx * 3 + 2}, $${idx * 3 + 3})`)
+        .map((_, idx) => `($${idx * 3 + 1}, $${idx * 3 + 2}, $${idx * 3 + 3})`) // [1,2,3], [4,5,6], [7,8,9]
         .join(", ")}
-    `;
-    await db.query(query, values.flat());
+    `; // https://emeritus.org/blog/how-to-use-sql-insert/#:~:text=use%20predefined%20defaults-,2.,it%20may%20impact%20recovery%20operations%2e
+    await db.query(query, values.flat()); // flattens values array of arrays to single array
     console.log(`Inserted ${i + BATCH_SIZE} contacts`);
   }
 }
@@ -93,8 +93,8 @@ async function insertMessages(messagePool) {
       const contactId = Math.floor(Math.random() * TOTAL_CONTACTS) + 1;
       const message =
         messagePool[Math.floor(Math.random() * messagePool.length)];
-      const sentAt = faker.date.past({ years: 2 }).toISOString();
-      values.push([contactId, message, sentAt]);
+      const createdAt = faker.date.past({ years: 2 }).toISOString();
+      values.push([contactId, message, createdAt]);
     }
     const query = `
       INSERT INTO messages (contact_id, content, created_at)
@@ -128,30 +128,30 @@ app.get("/recent-conversations", async (req, res) => {
 
     const query = `
       WITH ranked_messages AS (
-        SELECT 
+        SELECT
           m.contact_id,
           m.content AS last_message,
           m.created_at AS last_message_time,
           ROW_NUMBER() OVER (PARTITION BY m.contact_id ORDER BY m.created_at DESC) AS rank
-        FROM 
+        FROM
           messages m
       )
-      SELECT 
+      SELECT
         c.id AS contact_id,
         c.phone_number,
         rm.last_message,
         rm.last_message_time
-      FROM 
+      FROM
         contacts c
-      JOIN 
+      JOIN
         ranked_messages rm ON c.id = rm.contact_id
-      WHERE 
+      WHERE
         rm.rank = 1
         AND (
-          c.phone_number ILIKE $3 OR 
+          c.phone_number ILIKE $3 OR
           rm.last_message ILIKE $3
         )
-      ORDER BY 
+      ORDER BY
         rm.last_message_time DESC
       LIMIT $1 OFFSET $2;
     `;
