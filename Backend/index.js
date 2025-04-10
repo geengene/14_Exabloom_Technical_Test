@@ -53,7 +53,7 @@ async function loadMessageContent() {
     });
 
     rl.on("line", (line) => {
-      const message = line.replace(/^"|"$/g, "").trim();
+      const message = line.replace(/^"|"$/g, "").trim(); // removing surrounding double quotes
       if (message) {
         messages.push(message);
       }
@@ -75,7 +75,7 @@ async function insertContacts() {
     const query = `
       INSERT INTO contacts (phone_number, created_at, updated_at)
       VALUES ${values
-        .map((_, idx) => `($${idx * 3 + 1}, $${idx * 3 + 2}, $${idx * 3 + 3})`) // [1,2,3], [4,5,6], [7,8,9]
+        .map((_, idx) => `($${idx * 3 + 1}, $${idx * 3 + 2}, $${idx * 3 + 3})`) // [$1,$2,$3], [$4,$5,$6], [$7,$8,$9]
         .join(", ")}
     `; // https://emeritus.org/blog/how-to-use-sql-insert/#:~:text=use%20predefined%20defaults-,2.,it%20may%20impact%20recovery%20operations%2e
     await db.query(query, values.flat()); // flattens values array of arrays to single array
@@ -91,7 +91,7 @@ async function insertMessages(messagePool) {
       const message =
         messagePool[Math.floor(Math.random() * messagePool.length)];
       const createdAt = faker.date.past({ years: 2 }).toISOString();
-      values.push([contactId, message, createdAt]);
+      values.push([contactId, message, createdAt]); // one set of data
     }
     const query = `
       INSERT INTO messages (contact_id, content, created_at)

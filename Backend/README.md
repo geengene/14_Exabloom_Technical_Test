@@ -48,5 +48,9 @@ PG_PORT=5432/ your port
 - [!] there is no contact.name
 
 `I said I went to heaven because I thought it would get me attention." The admission created a firestorm within the worlds of evangelical faith and Christian publishing`
-
+...
 `I'm curious to see it with my kids.  We're a dog-loving family.  They're "man`
+
+Demonstrates the query performance
+Discusses the optimization strategies employed
+Addresses any challenges encountered and how they were overcome
