@@ -2,7 +2,6 @@ import express from "express";
 import pg from "pg";
 import { faker } from "@faker-js/faker";
 import fs from "fs";
-import csv from "csv-parser";
 import readline from "readline";
 import env from "dotenv";
 
